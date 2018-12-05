@@ -1,0 +1,29 @@
+function ping_f {
+echo "Please, select a network interface:"
+cd /sys/class/net && select foo in *; do sudo tcpdump -i $foo icmp and icmp[icmptype]=icmp-echo; done
+}
+
+function port_f {
+echo -n "Specify port: "
+read port_val
+        tcpdump 'tcp port '$port_val -i eth0
+}
+
+
+clear
+options=("Ping" "Some specific port")
+echo "$title"
+PS10="$prompt "
+select opt in "${options[@]}"; do
+
+    case "$REPLY" in
+
+    1 ) clear && ping_f; break;;
+    2 ) clear && port_f; break;;
+
+    $(( ${#options[@]}+1 )) ) echo "Invalid option. Try another one.";continue;;
+    *) echo "Invalid option. Try another one.";continue;;
+
+    esac
+
+done
